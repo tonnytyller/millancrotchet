@@ -1,0 +1,8 @@
+{
+  "name": "netlify-comments",
+  "version": "1.0.0",
+  "description": "GitHub-based comments system for Netlify",
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  }
+}
