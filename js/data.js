@@ -22,7 +22,7 @@ const mockProducts = [
         sizes: ['XS', 'S', 'M', 'L', 'XL'],
         colors: ['Black'],
         inStock: true,
-        featured: false,
+        featured: true,
         createdAt: '2024-01-02'
     },
     {
@@ -100,7 +100,7 @@ const mockProducts = [
         sizes: ['XS', 'S', 'M', 'L', 'XL'],
         colors: ['Green & White'],
         inStock: true,
-        featured: false,
+        featured: true,
         createdAt: '2024-01-08'
     },
     {
@@ -113,7 +113,7 @@ const mockProducts = [
         sizes: ['XS', 'S', 'M', 'L', 'XL'],
         colors: ['Hot Pink'],
         inStock: true,
-        featured: false,
+        featured: true,
         createdAt: '2024-01-09'
     },
     {
@@ -139,7 +139,7 @@ const mockProducts = [
         sizes: ['XS', 'S', 'M', 'L', 'XL'],
         colors: ['Purple'],
         inStock: true,
-        featured: false,
+        featured: true,
         createdAt: '2024-01-11'
     },
     {
