@@ -1,0 +1,339 @@
+<!-- After the Customize section in your product.html -->
+
+<div class="product-comments">
+  <h3>Customer Reviews & Ratings</h3>
+  
+  <div class="rating-summary">
+    <div class="overall-rating">
+      <span class="average-rating">0.0</span>
+      <div class="stars" id="average-stars">
+        <!-- Stars will be populated by JavaScript -->
+      </div>
+      <span class="review-count">(0 reviews)</span>
+    </div>
+  </div>
+  
+  <div class="add-review">
+    <h4>Add Your Review</h4>
+    <div class="rating-input">
+      <span>Your Rating:</span>
+      <div class="star-rating">
+        <span class="star" data-value="1">☆</span>
+        <span class="star" data-value="2">☆</span>
+        <span class="star" data-value="3">☆</span>
+        <span class="star" data-value="4">☆</span>
+        <span class="star" data-value="5">☆</span>
+      </div>
+    </div>
+    <form id="comment-form">
+      <textarea placeholder="Share your experience with this product..." required></textarea>
+      <button type="submit" class="btn btn-primary">Submit Review</button>
+    </form>
+  </div>
+  
+  <div id="comments-section">
+    <!-- Comments will be dynamically added here -->
+  </div>
+</div>
+
+<style>
+/* Comment section styles that match your existing design */
+.product-comments {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.rating-summary {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.overall-rating {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.average-rating {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1;
+}
+
+.stars {
+  display: flex;
+  margin: 0.5rem 0;
+}
+
+.star {
+  color: #fbbf24;
+  font-size: 1.5rem;
+}
+
+.review-count {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.add-review {
+  background: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.add-review h4 {
+  margin-bottom: 1rem;
+  color: #111827;
+}
+
+.rating-input {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.rating-input span {
+  margin-right: 1rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.star-rating {
+  display: flex;
+}
+
+.star-rating .star {
+  cursor: pointer;
+  font-size: 1.5rem;
+  transition: color 0.2s;
+}
+
+.star-rating .star:hover,
+.star-rating .star.active {
+  color: #fbbf24;
+}
+
+#comment-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  resize: vertical;
+  min-height: 100px;
+  margin-bottom: 1rem;
+  font-family: inherit;
+}
+
+#comments-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.comment {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.comment-author {
+  font-weight: 600;
+  color: #111827;
+}
+
+.comment-rating {
+  display: flex;
+  color: #fbbf24;
+}
+
+.comment-date {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+.comment-text {
+  color: #374151;
+  line-height: 1.6;
+}
+
+.no-reviews {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem;
+}
+</style>
+
+<script>
+// Comment system functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const commentForm = document.getElementById('comment-form');
+  const commentsSection = document.getElementById('comments-section');
+  const averageRatingEl = document.querySelector('.average-rating');
+  const reviewCountEl = document.querySelector('.review-count');
+  const averageStarsEl = document.getElementById('average-stars');
+  const starRating = document.querySelectorAll('.star-rating .star');
+  
+  let userRating = 0;
+  let allComments = JSON.parse(localStorage.getItem('productComments')) || [];
+  let currentProductId = window.location.pathname + window.location.search;
+  
+  // Initialize star rating interaction
+  starRating.forEach(star => {
+    star.addEventListener('click', function() {
+      const value = parseInt(this.getAttribute('data-value'));
+      userRating = value;
+      
+      // Update star display
+      starRating.forEach((s, index) => {
+        if (index < value) {
+          s.classList.add('active');
+          s.textContent = '★';
+        } else {
+          s.classList.remove('active');
+          s.textContent = '☆';
+        }
+      });
+    });
+  });
+  
+  // Calculate and display average rating
+  function updateAverageRating() {
+    const productComments = allComments.filter(comment => comment.productId === currentProductId);
+    const totalReviews = productComments.length;
+    
+    if (totalReviews === 0) {
+      averageRatingEl.textContent = '0.0';
+      reviewCountEl.textContent = '(0 reviews)';
+      averageStarsEl.innerHTML = '<span class="star">☆</span>'.repeat(5);
+      commentsSection.innerHTML = '<div class="no-reviews">No reviews yet. Be the first to review this product!</div>';
+      return;
+    }
+    
+    const totalRating = productComments.reduce((sum, comment) => sum + comment.rating, 0);
+    const averageRating = (totalRating / totalReviews).toFixed(1);
+    
+    averageRatingEl.textContent = averageRating;
+    reviewCountEl.textContent = `(${totalReviews} reviews)`;
+    
+    // Update average stars display
+    let starsHTML = '';
+    const fullStars = Math.floor(averageRating);
+    const hasHalfStar = averageRating % 1 >= 0.5;
+    
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        starsHTML += '<span class="star">★</span>';
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        starsHTML += '<span class="star">★</span>';
+      } else {
+        starsHTML += '<span class="star">☆</span>';
+      }
+    }
+    
+    averageStarsEl.innerHTML = starsHTML;
+  }
+  
+  // Display existing comments
+  function displayComments() {
+    const productComments = allComments.filter(comment => comment.productId === currentProductId);
+    
+    if (productComments.length === 0) {
+      commentsSection.innerHTML = '<div class="no-reviews">No reviews yet. Be the first to review this product!</div>';
+      return;
+    }
+    
+    commentsSection.innerHTML = '';
+    
+    productComments.forEach(comment => {
+      const commentEl = document.createElement('div');
+      commentEl.className = 'comment';
+      
+      // Format date
+      const commentDate = new Date(comment.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      
+      // Create stars for rating
+      let starsHTML = '';
+      for (let i = 1; i <= 5; i++) {
+        starsHTML += i <= comment.rating ? '<span class="star">★</span>' : '<span class="star">☆</span>';
+      }
+      
+      commentEl.innerHTML = `
+        <div class="comment-header">
+          <span class="comment-author">${comment.author}</span>
+          <span class="comment-date">${commentDate}</span>
+        </div>
+        <div class="comment-rating">
+          ${starsHTML}
+        </div>
+        <div class="comment-text">${comment.text}</div>
+      `;
+      
+      commentsSection.appendChild(commentEl);
+    });
+  }
+  
+  // Handle form submission
+  commentForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const textarea = this.querySelector('textarea');
+    const commentText = textarea.value.trim();
+    
+    if (userRating === 0) {
+      alert('Please select a rating before submitting your review.');
+      return;
+    }
+    
+    if (!commentText) {
+      alert('Please write a review before submitting.');
+      return;
+    }
+    
+    // Create new comment object
+    const newComment = {
+      id: Date.now(),
+      productId: currentProductId,
+      author: 'You', // In a real app, this would be the logged in user's name
+      rating: userRating,
+      text: commentText,
+      date: new Date().toISOString()
+    };
+    
+    // Add to comments array and save to localStorage
+    allComments.push(newComment);
+    localStorage.setItem('productComments', JSON.stringify(allComments));
+    
+    // Reset form
+    textarea.value = '';
+    starRating.forEach(star => {
+      star.classList.remove('active');
+      star.textContent = '☆';
+    });
+    userRating = 0;
+    
+    // Update display
+    updateAverageRating();
+    displayComments();
+    
+    alert('Thank you for your review!');
+  });
+  
+  // Initial setup
+  updateAverageRating();
+  displayComments();
+});
+</script>
