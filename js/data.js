@@ -30,7 +30,7 @@ const mockProducts = [
         name: 'Beige Crochet Ruffled Hat',
         description: 'A charming beige crochet hat with elegant ruffled edges, combining both style and comfort for a unique handmade accessory.',
         price: 350,
-        category: 'Accessories',
+        category: 'Hats & Bennies',
         images: ['images/3.jpg'],
         sizes: ['One Size'],
         colors: ['Beige'],
@@ -72,7 +72,7 @@ const mockProducts = [
         category: 'Hats & Bennies',
         images: ['images/6.jpg'],
         sizes: ['S','L'],
-        colors: ['Black & White'],
+        colors: ['Black','White'],
         inStock: true,
         featured: false,
         createdAt: '2025-01-05'
@@ -111,7 +111,7 @@ const mockProducts = [
         category: 'Women',
         images: ['images/9.jpg'],
         sizes: ['XS', 'S', 'M', 'L', 'XL'],
-        colors: ['Hot Pink'],
+        colors: ['Pink'],
         inStock: true,
         featured: true,
         createdAt: '2024-01-09'
@@ -121,10 +121,10 @@ const mockProducts = [
         name: 'Beige Crochet Ruffled Hat',
         description: 'A charming crochet hat with delicate ruffled edges, perfect for sun protection with a stylish twist.',
         price: 450,
-        category: 'Accessories',
+        category: 'Hats & Bennies',
         images: ['images/10.jpg'],
         sizes: ['One Size'],
-        colors: ['Beige'],
+        colors: ['Beige','white'],
         inStock: true,
         featured: false,
         createdAt: '2024-01-10'
@@ -209,17 +209,107 @@ const mockProducts = [
     },
     {
         id: '17',
-        name: 'Orange Crochet Halter Top',
-        description: 'A vibrant orange crochet halter top with a bohemian flair, perfect for festival or beach wear.',
-        price: 0,
-        category: 'Women',
+        name: 'Crochet Halter bennies',
+        description: 'A vibrant crochet halter bennies with a bohemian flair, perfect for nights out and casual wear.',
+        price: 600,
+        category: 'Hats & Bennies',
         images: ['images/17.jpg'],
         sizes: ['XS', 'S', 'M', 'L', 'XL'],
-        colors: ['Orange'],
+        colors: ['Orange','gray','Brown'],
         inStock: true,
         featured: false,
         createdAt: '2024-01-17'
-    }
+    },{
+        id: '18',
+        name: 'Sandy Breeze Set',
+        description: ' A chic beige crochet two-piece set featuring a halter bralette and a mesh-style maxi skirt — perfect for beach getaways or warm evening strolls. Light, breathable, and effortlessly elegant.',
+        price: 1800,
+        category: 'Women',
+        images: ['images/18.jpg'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: ['white','purple'],
+        inStock: true,
+        featured: false,
+        createdAt: '2025-04-02'
+    },
+    {
+        id: '19',
+        name: 'Coconut Crush Set',
+        description: 'A flirty white crochet mini skirt and matching crop top set with a halter neckline — playful, breathable, and perfect for sunny days or beachside vibes.',
+        price: 1600,
+        category: 'Women',
+        images: ['images/19.jpg'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: ['white','purple'],
+        inStock: true,
+        featured: false,
+        createdAt: '2025-06-01'
+    },
+    {
+        id: '20',
+        name: 'Midnight Muse Set',
+        description: 'Elegant and bold, this black crochet two-piece set features a corset-style top and a matching semi-sheer skirt — perfect for evening outings or a confident, statement look.',
+        price: 2100,
+        category: 'Women',
+        images: ['images/20.jpg'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: ['black','white'],
+        inStock: true,
+        featured: false,
+        createdAt: '2025-06-01'
+    },
+    {
+        id: '21',
+        name: 'Olive Glow Maxi Skirt',
+        description: 'A stunning hand-crocheted olive green maxi skirt that hugs the curves perfectly — ideal for a bold, earthy statement with casual or elevated looks.',
+        price: 550,
+        category: 'Women',
+        images: ['images/21.jpg'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: ['green'],
+        inStock: true,
+        featured: false,
+        createdAt: '2025-06-01'
+    },
+    {
+        id: '22',
+        name: 'Sunshine Blossom Top',
+        description: 'A white crochet halter top with a playful open-stitch pattern, perfect for sunny days and outdoor vibes. Styled with colorful beads and a red bow, it radiates youthful charm and energy.',
+        price: 550,
+        category: 'Women',
+        images: ['images/22.jpg'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: ['white','black'],
+        inStock: true,
+        featured: false,
+        createdAt: '2025-04-02'
+    },
+    {
+        id: '23',
+        name: 'Ruby Mesh Statement Skirt',
+        description: 'Bold and daring, this vibrant red crochet skirt features mesh panels and delicate pearl accents — perfect for turning heads and making every step unforgettable.',
+        price: 1200,
+        category: '',
+        images: ['images/23.jpg'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: ['red','white'],
+        inStock: true,
+        featured: false,
+        createdAt: '2024-01-17'
+    },
+    {
+        id: '',
+        name: '',
+        description: '',
+        price: 0,
+        category: '',
+        images: ['images/.jpg'],
+        sizes: ['XS', 'S', 'M', 'L', 'XL'],
+        colors: [''],
+        inStock: true,
+        featured: false,
+        createdAt: ''
+    },
 ];
 
 const categories = [
@@ -228,13 +318,13 @@ const categories = [
     'Bags',
     'Accessories',
     'Blankets',
-    'Home Decor',
+    'Hats & Bennies',
     'Children',
     'Men'
 ];
 
 const availableColors = [
-    'Red', 'Pink', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Brown', 'Black', 'White', 'Gray', 'Beige'
+    'Red', 'Pink', 'Orange', 'Yellow', 'Green', 'Blue', 'Purple', 'Brown', 'Black', 'White', 'Gray', 'Beige','Multicolor'
 ];
 
 // Utility functions
@@ -293,4 +383,4 @@ function sortProducts(products, sortBy) {
         default:
             return sorted.sort((a, b) => b.featured ? 1 : -1);
     }
-        }
+            }
