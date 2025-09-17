@@ -1,7 +1,7 @@
 const mockProducts = [
     {
         id: '1',
-        name: 'Mipan Blue & White Striped Crochet Halter Top',
+        name: 'Milan Blue & White Striped Crochet Halter Top',
         description: 'A stylish hand-crocheted halter top featuring bold blue and white stripes, perfect for warm weather and casual outings.',
         price: 700,
         category: 'Women',
