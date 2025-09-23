@@ -8,6 +8,307 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Wishlist Styles */
+        .wishlist-modal {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 100vh;
+            background: white;
+            z-index: 1001;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wishlist-modal.open {
+            transform: translateX(0);
+        }
+
+        .wishlist-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .wishlist-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wishlist-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .close-wishlist {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-wishlist:hover {
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        .wishlist-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        .empty-wishlist {
+            text-align: center;
+            color: #6b7280;
+            padding: 3rem 1rem;
+        }
+
+        .wishlist-items {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .wishlist-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .wishlist-item:last-child {
+            border-bottom: none;
+        }
+
+        .wishlist-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 0.5rem;
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+
+        .wishlist-item-info {
+            flex: 1;
+        }
+
+        .wishlist-item-title {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #111827;
+            cursor: pointer;
+        }
+
+        .wishlist-item-price {
+            margin: 0;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #f97316;
+        }
+
+        .remove-wishlist-item {
+            background: none;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .remove-wishlist-item:hover {
+            background: #fef2f2;
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        /* Wishlist toast */
+        #wishlistToast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ec4899 0%, #f97316 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            z-index: 1002;
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        #wishlistToast.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .wishlist-toast-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Wishlist button styles */
+        .wishlist-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 2;
+        }
+
+        .wishlist-btn:hover {
+            background: #fef2f2;
+            transform: scale(1.1);
+        }
+
+        .wishlist-btn.active {
+            background: #fef2f2;
+            color: #ef4444;
+        }
+
+        .wishlist-btn.active svg {
+            fill: #ef4444;
+        }
+
+        .wishlist-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .action-btn, .mobile-action-btn {
+            position: relative;
+        }
+
+        /* Social media styles */
+        .social-media-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .social-button {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .social-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .social-button i {
+            font-size: 20px;
+            width: 30px;
+            text-align: center;
+        }
+
+        .social-button span {
+            margin-left: 12px;
+            font-weight: 500;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .whatsapp {
+            background: #25D366;
+        }
+
+        .instagram {
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+        }
+
+        .twitter {
+            background: #1DA1F2;
+        }
+
+        /* Toast animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -38,6 +339,7 @@
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                         </svg>
+                        <span class="wishlist-count" id="wishlistCount">0</span>
                     </button>
                     <button class="action-btn" id="userBtn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -80,20 +382,15 @@
                             <path d="m21 21-4.35-4.35"></path>
                         </svg>
                     </button>
-                    <button class="mobile-action-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                        </svg>
-                    </button>
-                    <button class="mobile-action-btn">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                    </button>
+                    <button class="mobile-action-btn" id="mobileWishlistBtn">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+    <span class="wishlist-count" id="mobileWishlistCount">0</span>
+</button>
                     <button class="mobile-action-btn mobile-cart-btn">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z"></path>
+                            <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z"></span>
                             <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z"></path>
                             <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6"></path>
                         </svg>
@@ -219,7 +516,7 @@
             <div class="container">
                 <div class="newsletter-content">
                     <h2 class="newsletter-title">Stay Updated with Milan Crochet</h2>
-                    <p class="newsletter-description">Subscribe to our newsletter for new products,kaa chonjo for special offers, and crochet tips</p>
+                    <p class="newsletter-description">Subscribe to our newsletter for new products, special offers, and crochet tips</p>
                     <form class="newsletter-form" id="newsletterForm">
                         <input type="email" placeholder="Enter your email" class="newsletter-input" required>
                         <button type="submit" class="btn btn-white">Subscribe</button>
@@ -243,88 +540,17 @@
                         Each piece is uniquely made by skilled Milan priscah.
                     </p>
                     <div class="social-media-column">
-    <a href="https://wa.me/+254791174063?text=Hello%20I'm%20interested%20in%20your%20services" class="social-button whatsapp" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-        <span>+254 791 174063</span>
-    </a>
-    
-    <a href="https://www.instagram.com/milans_crotchet_wrld" class="social-button instagram" target="_blank">
-        <i class="fab fa-instagram"></i>
-        <span>@milans_crotchet_wrld</span>
-    </a>
-    
-    <a href="https://twitter.com/yourusername" class="social-button twitter" target="_blank">
-        <i class="fab fa-twitter"></i>
-        <span>@yourusername</span>
-    </a>
-</div>
-
-<style>
-.social-media-column {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 300px;
-    margin: 0 auto;
-}
-
-.social-button {
-    display: flex;
-    align-items: center;
-    padding: 12px 16px;
-    border-radius: 8px;
-    text-decoration: none;
-    color: white;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.social-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.social-button i {
-    font-size: 20px;
-    width: 30px;
-    text-align: center;
-}
-
-.social-button span {
-    margin-left: 12px;
-    font-weight: 500;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.whatsapp {
-    background: #25D366;
-}
-
-.instagram {
-    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
-}
-
-.twitter {
-    background: #1DA1F2;
-}
-</style>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-                    <div class="social-links">
-                        <a href="#" class="social-link">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
-                            </svg>
+                        <a href="https://wa.me/+254791174063?text=Hello%20I'm%20interested%20in%20your%20services" class="social-button whatsapp" target="_blank">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>+254 791 174063</span>
                         </a>
-                        <a href="#" class="social-link">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.174-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.347-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.402.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.92-7.252 4.158 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.357-.629-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24.009 12.017 24.009c6.624 0 11.99-5.367 11.99-11.988C24.007 5.367 18.641.001.012.001z.017-.001z"/>
-                            </svg>
+                        <a href="https://www.instagram.com/milans_crochet_wrld" class="social-button instagram" target="_blank">
+                            <i class="fab fa-instagram"></i>
+                            <span>@milans_crotchet_wrld</span>
                         </a>
-                        <a href="#" class="social-link">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                            </svg>
+                        <a href="https://twitter.com/millancrotchet" class="social-button twitter" target="_blank">
+                            <i class="fab fa-twitter"></i>
+                            <span>@millancrotchet</span>
                         </a>
                     </div>
                 </div>
@@ -408,9 +634,9 @@
         </div>
     </div>
 
-    <script src="js/data.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/contact-info"></script>  
+    <script src="js/data.js" defer></script>
+<script src="js/wishlist.js" defer></script>
+<script src="js/cart.js" defer></script>
+<script src="js/main.js" defer></script>
 </body>
-    </html>
+</html>
