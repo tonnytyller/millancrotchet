@@ -65,10 +65,15 @@ function loadFeaturedProducts() {
     const featuredProducts = getFeaturedProducts();
     
     container.innerHTML = featuredProducts.map(product => createProductCard(product)).join('');
+    
+    
+    Wishlist.updateWishlistButtons();
 }
 
-// Create product card HTML
 function createProductCard(product) {
+    // REMOVE THIS LINE: const isInWishlist = Wishlist.hasItem(product.id);
+    // REMOVE THIS LINE: const wishlistClass = isInWishlist ? 'active' : '';
+    
     const colors = product.colors.slice(0, 3).map(color => `
         <div class="color-dot" style="background-color: ${getColorStyle(color)}" title="${color}"></div>
     `).join('');
@@ -82,7 +87,7 @@ function createProductCard(product) {
             <div class="product-image">
                 <img src="${product.images[0]}" alt="${product.name}">
                 ${product.featured ? '<div class="product-badge">Featured</div>' : ''}
-                <button class="wishlist-btn" onclick="event.stopPropagation(); toggleWishlist('${product.id}')">
+                <button class="wishlist-btn" data-id="${product.id}" onclick="event.stopPropagation(); toggleWishlist('${product.id}', event)">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                     </svg>
@@ -137,45 +142,6 @@ function addToCartFromCard(productId) {
         const defaultColor = product.colors.length > 0 ? product.colors[0] : null;
         cart.addItem(product, 1, defaultSize, defaultColor);
     }
-}
-
-// Wishlist functionality (placeholder)
-function toggleWishlist(productId) {
-    // Placeholder for wishlist functionality
-    console.log('Toggle wishlist for product:', productId);
-    
-    // Show feedback
-    const toast = document.createElement('div');
-    toast.innerHTML = `
-        <div style="
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ef4444;
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-        ">
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
-                <span>Added to wishlist</span>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.animation = 'slideOut 0.3s ease';
-        setTimeout(() => {
-            document.body.removeChild(toast);
-        }, 300);
-    }, 2000);
 }
 
 // Newsletter form
